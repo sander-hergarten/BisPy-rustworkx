@@ -54,7 +54,7 @@ def test_integer_graph_rx():
         assert edge[1] == edge[0] + 1 or edge[1] == 0
 
 
-def test_integrality_check():
+def test_integrality_check_nx():
     # 1
     g1 = nx.DiGraph()
     g1.add_nodes_from([1, 2, 3, 4])
@@ -72,6 +72,28 @@ def test_integrality_check():
 
     # 4
     g4 = nx.DiGraph()
+    g4.add_nodes_from([0, 2, 3, 4])
+    assert not check_normal_integer_graph(g4)
+
+
+def test_integrality_check_rx():
+    # 1
+    g1 = rx.PyDiGraph()
+    g1.add_nodes_from([1, 2, 3, 4])
+    assert not check_normal_integer_graph(g1)
+
+    # 2
+    g2 = rx.PyDiGraph()
+    g2.add_nodes_from(["a", 0, 2, 3, 4])
+    assert not check_normal_integer_graph(g2)
+
+    # 3
+    g3 = rx.PyDiGraph()
+    g3.add_nodes_from([0, 1, 2, 3, 4])
+    assert check_normal_integer_graph(g3)
+
+    # 4
+    g4 = rx.PyDiGraph()
     g4.add_nodes_from([0, 2, 3, 4])
     assert not check_normal_integer_graph(g4)
 

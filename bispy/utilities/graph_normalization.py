@@ -60,16 +60,34 @@ def _convert_to_integer_graph_rx(
     return integer_graph, node_to_idx
 
 
-def check_normal_integer_graph(graph: nx.Graph) -> bool:
+def check_normal_integer_graph(graph: nx.Graph | rx.PyDiGraph) -> bool:
     """Check whether the given graph is integer.
 
     :param graph: The input graph.
     """
 
-    return (
-        all(map(lambda node: isinstance(node, int) and node >= 0, graph.nodes))
-        and max(graph.nodes) == len(graph.nodes) - 1
-    )
+    if isinstance(graph, nx.DiGraph):
+        return (
+            all(
+                map(
+                    lambda node: isinstance(node, int) and node >= 0,
+                    graph.nodes,
+                )
+            )
+            and max(graph.nodes) == len(graph.nodes) - 1
+        )
+    elif isinstance(graph, rx.PyDiGraph):
+        return (
+            all(
+                map(
+                    lambda node: isinstance(node, int) and node >= 0,
+                    graph.nodes(),
+                )
+            )
+            and max(graph.nodes()) == len(graph.nodes()) - 1
+        )
+    else:
+        raise ValueError("Invalid graph type.")
 
 
 def back_to_original(

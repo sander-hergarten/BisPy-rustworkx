@@ -1,10 +1,11 @@
 import networkx as nx
+import rustworkx as rx
 from typing import Dict, Tuple, Any, List
 
 
 def convert_to_integer_graph(
-    graph: nx.Graph,
-) -> Tuple[nx.Graph, Dict[Any, int]]:
+    graph: nx.Graph | rx.PyDiGraph,
+) -> Tuple[nx.Graph | rx.PyDiGraph, Dict[Any, int]]:
     """Convert the given graph to an isomorphic integer graph.
 
     :param graph: The input graph.
@@ -13,7 +14,17 @@ def convert_to_integer_graph(
         0. The integer ismorphic graph;
         1. A `dict` which may be used to recover the original graph.
     """
+    if isinstance(graph, nx.DiGraph):
+        return _convert_to_integer_graph_nx(graph)
+    elif isinstance(graph, rx.PyDiGraph):
+        return _convert_to_integer_graph_rx(graph)
+    else:
+        raise ValueError("Invalid graph type.")
 
+
+def _convert_to_integer_graph_nx(
+    graph: nx.Graph,
+) -> Tuple[nx.Graph, Dict[Any, int]]:
     integer_graph = nx.DiGraph()
 
     # add new integer nodes
@@ -25,6 +36,25 @@ def convert_to_integer_graph(
     # add integer edges
     integer_graph.add_edges_from(
         (node_to_idx[edge[0]], node_to_idx[edge[1]]) for edge in graph.edges
+    )
+
+    return integer_graph, node_to_idx
+
+
+def _convert_to_integer_graph_rx(
+    graph: rx.PyDiGraph,
+) -> Tuple[rx.PyDiGraph, Dict[Any, int]]:
+    integer_graph = rx.PyDiGraph()
+
+    # add new integer nodes
+    integer_graph.add_nodes_from(range(len(graph.nodes())))
+
+    # map old nodes to integer nodes
+    node_to_idx = {old_node: idx for idx, old_node in enumerate(graph.nodes())}
+
+    # add integer edges
+    integer_graph.add_edges_from(
+        [(edge[0], edge[1], None) for edge in graph.edge_list()]
     )
 
     return integer_graph, node_to_idx

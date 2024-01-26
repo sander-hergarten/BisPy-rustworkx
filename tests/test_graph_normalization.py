@@ -1,5 +1,6 @@
 import pytest
 import networkx as nx
+import rustworkx as rx
 
 from bispy.utilities.graph_normalization import (
     check_normal_integer_graph,
@@ -8,7 +9,7 @@ from bispy.utilities.graph_normalization import (
 )
 
 
-def test_integer_graph():
+def test_integer_graph_nx():
     nodes = [0, 1, 2, "a", "b", frozenset([5]), nx.DiGraph()]
 
     graph = nx.DiGraph()
@@ -27,6 +28,29 @@ def test_integer_graph():
 
     # test the correctness of edges
     for edge in integer_graph.edges:
+        assert edge[1] == edge[0] + 1 or edge[1] == 0
+
+
+def test_integer_graph_rx():
+    nodes = [0, 1, 2, "a", "b", frozenset([5]), rx.PyDiGraph()]
+
+    graph = rx.PyDiGraph()
+    graph.add_nodes_from(nodes)
+
+    # add an edge to the next node, and to the first node in the list
+    n = lambda z: graph.find_node_by_weight(z)
+    for i in range(len(nodes) - 1):
+        graph.add_edge(n(nodes[i]), n(nodes[0]), None)
+        graph.add_edge(n(nodes[i]), n(nodes[i + 1]), None)
+
+    integer_graph, node_to_idx = convert_to_integer_graph(graph)
+
+    # test the map's correctness
+    for node in nodes:
+        assert nodes[node_to_idx[node]] == node
+
+    # test the correctness of edges
+    for edge in integer_graph.edge_list():
         assert edge[1] == edge[0] + 1 or edge[1] == 0
 
 

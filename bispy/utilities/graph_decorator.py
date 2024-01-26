@@ -1,4 +1,5 @@
 import networkx as nx
+import rustworkx as rx
 from bispy.utilities.graph_entities import (
     _Vertex,
     _Edge,
@@ -130,7 +131,7 @@ def compute_counterimage_finishing_time_list(
 
 
 def as_bispy_graph(
-    graph: nx.Graph,
+    graph: nx.Graph | rx.PyDiGraph,
     initial_partition: List[Tuple[int]],
     build_image,
     set_count,
@@ -161,11 +162,11 @@ def as_bispy_graph(
     """
 
     if initial_partition is None:
-        initial_partition = _trivial_initial_partition(len(graph.nodes))
+        initial_partition = _trivial_initial_partition(len(graph.nodes()))
 
     # instantiate QBlocks and Vertexes, put Vertexes into QBlocks and set their
     # initial block id
-    vertexes = [None for _ in graph.nodes]
+    vertexes = [None for _ in graph.nodes()]
     qblocks = []
 
     initial_x_block = _XBlock() if set_xblock else None
@@ -182,13 +183,13 @@ def as_bispy_graph(
     if set_count:
         # holds the references to Count objects to assign to the edges.
         # count(x) = count(x,V) = |V \cap E({x})| = |E({x})|
-        vertex_count = [None for _ in graph.nodes]
+        vertex_count = [None for _ in graph.nodes()]
     else:
         vertex_count = None
 
     # build the counterimage. the image will be constructed using the order
     # imposed by the rank algorithm
-    for edge in graph.edges:
+    for edge in graph.edge_list():
         # create an instance of my class Edge
         my_edge = _Edge(vertexes[edge[0]], vertexes[edge[1]])
 
@@ -247,8 +248,8 @@ def build_vertexes_image(finishing_time_list: List[_Vertex]):
         visited_vx.release()
 
 
-def decorate_nx_graph(
-    graph: nx.Graph,
+def decorate_graph(
+    graph: nx.Graph | rx.PyDiGraph,
     initial_partition: List[Tuple[int]] = None,
     set_count: bool = True,
     topological_sorted_images: bool = True,
@@ -291,7 +292,7 @@ def decorate_nx_graph(
     """
 
     if initial_partition is None:
-        initial_partition = _trivial_initial_partition(len(graph.nodes))
+        initial_partition = _trivial_initial_partition(len(graph.nodes()))
 
     tp = as_bispy_graph(
         graph,

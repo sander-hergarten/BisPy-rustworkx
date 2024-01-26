@@ -1,7 +1,7 @@
 import networkx as nx
 from bispy.utilities.graph_decorator import (
     decorate_bispy_graph,
-    decorate_nx_graph,
+    decorate_graph,
 )
 
 # new scc
@@ -83,7 +83,7 @@ g0.add_edges_from(
 )
 ip0 = [(0, 1, 2), (3, 4), (5,), (6,)]
 
-vertexes0, qblocks0 = decorate_nx_graph(g0, ip0)
+vertexes0, qblocks0 = decorate_graph(g0, ip0)
 decorate_bispy_graph(vertexes0, ip0)
 exists_causal_splitter_qblocks.append(qblocks0)
 # integer tuples are the indexes of the blocks in qblocks0

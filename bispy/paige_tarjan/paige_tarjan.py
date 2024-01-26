@@ -12,7 +12,7 @@ from bispy.paige_tarjan.compound_xblocks_container import (
     CompoundXBlocksContainer,
 )
 from bispy.utilities.graph_decorator import (
-    decorate_nx_graph,
+    decorate_graph,
     preprocess_initial_partition,
     to_tuple_list,
 )
@@ -392,7 +392,7 @@ def paige_tarjan(
         integer_graph = graph
         integer_initial_partition = initial_partition
 
-    vertexes, q_partition = decorate_nx_graph(
+    vertexes, q_partition = decorate_graph(
         integer_graph,
         integer_initial_partition,
         topological_sorted_images=False,

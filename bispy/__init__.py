@@ -6,7 +6,7 @@ from .saha.saha_partition import saha
 
 from .utilities.graph_decorator import (
     decorate_bispy_graph,
-    decorate_nx_graph,
+    decorate_graph,
     to_tuple_list,
 )
 from enum import Enum, auto

@@ -43,7 +43,7 @@ def compute_rank(vertexes: List[_Vertex], sccs=None):
 
     .. warning::
         The image of each node must be in *topological* order (see
-        :func:`bispy.utilities.graph_decorator.decorate_nx_graph`), otherwise
+        :func:`bispy.utilities.graph_decorator.decorate_graph`), otherwise
         the computed rank may be wrong.
 
     :param vertexes: Vertexes of the graph.

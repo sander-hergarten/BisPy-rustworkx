@@ -21,7 +21,7 @@ from functools import reduce
 from bispy.utilities.graph_entities import (
     _QBlock as _Block,
 )
-from bispy.utilities.graph_decorator import decorate_nx_graph, to_set
+from bispy.utilities.graph_decorator import decorate_graph, to_set
 
 
 # DPP = Dovier-Piazza-Policriti
@@ -35,7 +35,7 @@ from bispy.utilities.graph_decorator import decorate_nx_graph, to_set
     ),
 )
 def test_build_block_counterimage(graph, counterimaged_block_indexes):
-    vertexes, _ = decorate_nx_graph(graph)
+    vertexes, _ = decorate_graph(graph)
     counterimaged_block = _Block(
         map(lambda idx: vertexes[idx], counterimaged_block_indexes), None
     )
@@ -62,7 +62,7 @@ def test_build_block_counterimage(graph, counterimaged_block_indexes):
     graphs,
 )
 def test_prepare_graph_vertexes(graph):
-    vertexes, _ = decorate_nx_graph(graph)
+    vertexes, _ = decorate_graph(graph)
 
     # same length
     assert len(vertexes) == len(graph.nodes)
@@ -84,7 +84,7 @@ def test_prepare_graph_vertexes(graph):
 
 @pytest.mark.parametrize("graph", graphs)
 def test_split_upper_ranks(graph):
-    vertexes, _ = decorate_nx_graph(graph)
+    vertexes, _ = decorate_graph(graph)
     max_rank = max(vertex.rank for vertex in vertexes)
     partition_length = 0 if max_rank == float("-inf") else max_rank + 2
 

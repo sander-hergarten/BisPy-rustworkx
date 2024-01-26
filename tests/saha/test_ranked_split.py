@@ -9,7 +9,7 @@ import networkx as nx
 from bispy.saha.ranked_pta import ranked_split
 from bispy.paige_tarjan.paige_tarjan import paige_tarjan
 from bispy.saha.saha import add_edge
-from bispy.utilities.graph_decorator import decorate_nx_graph
+from bispy.utilities.graph_decorator import decorate_graph
 
 
 def partition_to_integer(partition: List[_QBlock]) -> Set[Set[int]]:
@@ -33,7 +33,7 @@ def test_resets_aux_count():
     g.add_nodes_from(range(5))
     g.add_edges_from([(0, 1), (0, 2), (3, 1), (3, 2), (4, 1), (4, 2), (4, 3)])
 
-    vertexes, _ = decorate_nx_graph(g)
+    vertexes, _ = decorate_graph(g)
 
     integer_partition = paige_tarjan(g)
     q_partition = integer_to_partition(integer_partition, vertexes)
@@ -60,7 +60,7 @@ def test_ranked_split():
     g.add_nodes_from(range(5))
     g.add_edges_from([(0, 1), (0, 2), (3, 1), (3, 2), (4, 1), (4, 2), (4, 3)])
 
-    vertexes, _ = decorate_nx_graph(g)
+    vertexes, _ = decorate_graph(g)
 
     integer_partition = paige_tarjan(g)
     q_partition = integer_to_partition(integer_partition, vertexes)

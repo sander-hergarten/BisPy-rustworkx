@@ -3,7 +3,7 @@ from typing import Iterable, List, Tuple, Dict, Union
 from itertools import islice
 from llist import dllist
 from bispy.utilities.graph_entities import _QBlock as _Block, _Vertex, _XBlock
-from bispy.utilities.graph_decorator import decorate_nx_graph
+from bispy.utilities.graph_decorator import decorate_graph
 from bispy.paige_tarjan.paige_tarjan import paige_tarjan_qblocks
 from bispy.utilities.graph_normalization import (
     check_normal_integer_graph,
@@ -255,7 +255,7 @@ def dovier_piazza_policriti(
     else:
         integer_graph = graph
 
-    vertexes, _ = decorate_nx_graph(integer_graph, initial_partition)
+    vertexes, _ = decorate_graph(integer_graph, initial_partition)
     partition = RankedPartition(vertexes)
 
     tp = dovier_piazza_policriti_partition(partition)

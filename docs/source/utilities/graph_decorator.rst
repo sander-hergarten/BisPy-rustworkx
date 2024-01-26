@@ -3,7 +3,7 @@ Graph decorator
 
 .. module:: bispy.utilities.graph_decorator
 
-.. autofunction:: decorate_nx_graph
+.. autofunction:: decorate_graph
 .. autofunction:: decorate_bispy_graph
 .. autofunction:: to_tuple_list
 .. autofunction:: preprocess_initial_partition

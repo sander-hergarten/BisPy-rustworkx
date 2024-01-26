@@ -30,7 +30,7 @@ from bispy.paige_tarjan.paige_tarjan import (
     paige_tarjan_qblocks,
     preprocess_initial_partition,
 )
-from bispy.utilities.graph_decorator import decorate_nx_graph, to_set
+from bispy.utilities.graph_decorator import decorate_graph, to_set
 import tests.paige_tarjan.paige_tarjan_test_cases as test_cases
 
 
@@ -41,7 +41,7 @@ import tests.paige_tarjan.paige_tarjan_test_cases as test_cases
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_preprocess(graph, initial_partition):
-    vertexes, qpartition = decorate_nx_graph(graph, initial_partition)
+    vertexes, qpartition = decorate_graph(graph, initial_partition)
 
     # check if leafs and non-leafs aren't mixed
     for block in qpartition:
@@ -61,7 +61,7 @@ def test_preprocess(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_qpartition_initialize(graph, initial_partition):
-    _, q_partition = decorate_nx_graph(graph, initial_partition)
+    _, q_partition = decorate_graph(graph, initial_partition)
 
     vertexes = set()
     for qblock in q_partition:
@@ -76,7 +76,7 @@ def test_qpartition_initialize(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_initialize_right_types(graph, initial_partition):
-    _, q_partition = decorate_nx_graph(graph, initial_partition)
+    _, q_partition = decorate_graph(graph, initial_partition)
 
     for qblock in q_partition:
         assert isinstance(qblock.vertexes, dllist)
@@ -94,7 +94,7 @@ def test_initialize_right_types(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_count_initialize(graph, initial_partition):
-    vertexes, _ = decorate_nx_graph(graph, initial_partition)
+    vertexes, _ = decorate_graph(graph, initial_partition)
 
     for vertex in vertexes:
         for edge in vertex.image:
@@ -105,7 +105,7 @@ def test_count_initialize(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_vertex_image_initialize(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
 
     right_image = [set() for node in graph.nodes]
     for edge in graph.edges:
@@ -122,8 +122,7 @@ def test_vertex_image_initialize(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_vertex_counterimage_initialize(graph, initial_partition):
-
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
 
     right_counterimage = [set() for node in graph.nodes]
     for edge in graph.edges:
@@ -161,7 +160,7 @@ def test_choose_qblock():
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_build_block_counterimage(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     for qblock in q_partition:
 
         def extract_vertex_label(llistobject):
@@ -185,7 +184,7 @@ def test_build_block_counterimage(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_build_block_counterimage_aux_count(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
 
     for chosen_index in range(len(initial_partition)):
         qblock = q_partition[chosen_index]
@@ -217,7 +216,7 @@ def test_build_block_counterimage_aux_count(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_vertex_taken_from_right_list(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
 
     block_counterimage = build_block_counterimage(q_partition[0])
 
@@ -235,7 +234,7 @@ def test_vertex_taken_from_right_list(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_can_remove_any_vertex_from_its_list(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
 
     for qblock in q_partition:
         vertex = qblock.vertexes.first
@@ -250,7 +249,7 @@ def test_can_remove_any_vertex_from_its_list(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_split(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     xblock = q_partition[0].xblock
 
     qblock_splitter = q_partition[0]
@@ -285,7 +284,7 @@ def test_split(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_split_helper_block_right_xblock(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     new_blocks, _, _ = split(vertexes[3:7])
 
     for new_block in new_blocks:
@@ -305,7 +304,7 @@ def test_split_helper_block_right_xblock(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_second_splitter_counterimage(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     xblock = q_partition[0].xblock
 
     qblock_splitter = q_partition[0]
@@ -340,7 +339,7 @@ def test_second_splitter_counterimage(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_second_split(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     xblock = q_partition[0].xblock
 
     qblock_splitter = q_partition[0]
@@ -376,7 +375,7 @@ def test_second_split(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_increase_n_of_xblocks_after_refinement(graph, initial_partition):
-    vertexes_dllistobejct, q_partition = decorate_nx_graph(
+    vertexes_dllistobejct, q_partition = decorate_graph(
         graph, initial_partition
     )
 
@@ -396,7 +395,7 @@ def test_increase_n_of_xblocks_after_refinement(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_reset_aux_count_after_refinement(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     xblock = q_partition[0].xblock
 
     refine([xblock], [xblock])
@@ -423,7 +422,7 @@ def test_count_after_refinement():
     graph.add_nodes_from(range(5))
     initial_partition = test_cases.initial_partitions[len(graph.nodes)]
 
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
 
     xblock = q_partition[0].xblock
     xblocks = [xblock]
@@ -431,7 +430,7 @@ def test_count_after_refinement():
     refine(xblocks=xblocks, compound_xblocks=[xblock])
 
     ok_count = [[0 for _ in vertexes] for _ in xblocks]
-    for (xblock_idx, xblock) in enumerate(xblocks):
+    for xblock_idx, xblock in enumerate(xblocks):
         for qblock in xblock.qblocks:
             for vertex in qblock.vertexes:
                 for source in [edge.source for edge in vertex.counterimage]:
@@ -456,7 +455,7 @@ def test_count_after_refinement():
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_no_negative_edge_counts(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     xblock = q_partition[0].xblock
 
     refine([xblock], [xblock])
@@ -470,7 +469,7 @@ def test_no_negative_edge_counts(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_refine_updates_compound_xblocks(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     xblock = q_partition[0].xblock
 
     x_partition = [xblock]
@@ -487,7 +486,7 @@ def test_refine_updates_compound_xblocks(graph, initial_partition):
     "graph, initial_partition", test_cases.graph_partition_tuples
 )
 def test_pt_result_is_stable_partition(graph, initial_partition):
-    vertexes, q_partition = decorate_nx_graph(graph, initial_partition)
+    vertexes, q_partition = decorate_graph(graph, initial_partition)
     s = paige_tarjan_qblocks(q_partition)
     assert is_stable_partition(s)
 
@@ -555,7 +554,7 @@ def graph_to_integer_graph(graph, initial_partition):
     ),
 )
 def test_pt_same_initial_partition(graph, initial_partition):
-    _, q_partition = decorate_nx_graph(graph, initial_partition)
+    _, q_partition = decorate_graph(graph, initial_partition)
     s = [tuple(block.vertexes) for block in paige_tarjan_qblocks(q_partition)]
 
     vertex_to_initial_partition_id = [None for _ in graph.nodes]

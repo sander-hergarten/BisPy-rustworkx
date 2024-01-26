@@ -4,7 +4,7 @@ from bispy.utilities.graph_normalization import (
     convert_to_integer_graph,
     back_to_original,
 )
-from bispy.utilities.graph_decorator import decorate_nx_graph, to_tuple_list
+from bispy.utilities.graph_decorator import decorate_graph, to_tuple_list
 from bispy.paige_tarjan.paige_tarjan import paige_tarjan_qblocks
 import networkx as nx
 from typing import Union, List, Dict, Any, Tuple
@@ -124,7 +124,7 @@ def saha(
         integer_initial_partition = initial_partition
         node_to_idx = None
 
-    vertexes, q_partition = decorate_nx_graph(
+    vertexes, q_partition = decorate_graph(
         integer_graph,
         integer_initial_partition,
     )

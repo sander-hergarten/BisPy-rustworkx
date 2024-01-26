@@ -160,7 +160,84 @@ def as_bispy_graph(
 
         Both the items are in *BisPy* representation.
     """
+    if isinstance(graph, nx.Graph):
+        return _as_bispy_graph_nx(
+            graph, initial_partition, build_image, set_count, set_xblock
+        )
+    elif isinstance(graph, rx.PyDiGraph):
+        return _as_bispy_graph_rx(
+            graph, initial_partition, build_image, set_count, set_xblock
+        )
+    else:
+        raise TypeError(
+            "graph must be either a NetworkX or a Rustworkx graph."
+        )
 
+
+def _as_bispy_graph_nx(
+    graph: nx.Graph,
+    initial_partition: List[Tuple[int]],
+    build_image,
+    set_count,
+    set_xblock,
+) -> Tuple[List[_Vertex], List[_QBlock]]:
+    if initial_partition is None:
+        initial_partition = _trivial_initial_partition(len(graph.nodes))
+
+    # instantiate QBlocks and Vertexes, put Vertexes into QBlocks and set their
+    # initial block id
+    vertexes = [None for _ in graph.nodes]
+    qblocks = []
+
+    initial_x_block = _XBlock() if set_xblock else None
+
+    for idx, block in enumerate(initial_partition):
+        qblock = _QBlock([], initial_x_block)
+        qblocks.append(qblock)
+        for vx in block:
+            new_vertex = _Vertex(label=vx)
+            vertexes[vx] = new_vertex
+            qblock.append_vertex(new_vertex)
+            new_vertex.initial_partition_block_id = idx
+
+    if set_count:
+        # holds the references to Count objects to assign to the edges.
+        # count(x) = count(x,V) = |V \cap E({x})| = |E({x})|
+        vertex_count = [None for _ in graph.nodes]
+    else:
+        vertex_count = None
+
+    # build the counterimage. the image will be constructed using the order
+    # imposed by the rank algorithm
+    for edge in graph.edges:
+        # create an instance of my class Edge
+        my_edge = _Edge(vertexes[edge[0]], vertexes[edge[1]])
+
+        if set_count:
+            # if this is the first outgoing edge for the vertex edge[0], we
+            # need to create a new Count instance
+            if not vertex_count[edge[0]]:
+                # in this case None represents the intitial XBlock, namely the
+                # whole V
+                vertex_count[edge[0]] = _Count(my_edge.source)
+
+            my_edge.count = vertex_count[edge[0]]
+            my_edge.count.value += 1
+
+        if build_image:
+            my_edge.source.add_to_image(my_edge)
+        my_edge.destination.add_to_counterimage(my_edge)
+
+    return (vertexes, qblocks)
+
+
+def _as_bispy_graph_rx(
+    graph: rx.PyDiGraph,
+    initial_partition: List[Tuple[int]],
+    build_image,
+    set_count,
+    set_xblock,
+) -> Tuple[List[_Vertex], List[_QBlock]]:
     if initial_partition is None:
         initial_partition = _trivial_initial_partition(len(graph.nodes()))
 

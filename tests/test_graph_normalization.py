@@ -1,6 +1,7 @@
 import pytest
 import networkx as nx
 import rustworkx as rx
+import rustworkx.generators as generators
 
 from bispy.utilities.graph_normalization import (
     check_normal_integer_graph,
@@ -54,6 +55,20 @@ def test_integer_graph_rx():
         assert edge[1] == edge[0] + 1 or edge[1] == 0
 
 
+def test_integer_graph_empty_rx():
+    graph = generators.directed_path_graph(5)
+
+    integer_graph, node_to_idx = convert_to_integer_graph(graph)
+    nodes = graph.node_indexes()
+    # test the map's correctness
+    for node in nodes:
+        assert nodes[node_to_idx[node]] == node
+
+    # test the correctness of edges
+    for edge in integer_graph.edge_list():
+        assert edge[1] == edge[0] + 1 or edge[1] == 0
+
+
 def test_integrality_check_nx():
     # 1
     g1 = nx.DiGraph()
@@ -96,6 +111,9 @@ def test_integrality_check_rx():
     g4 = rx.PyDiGraph()
     g4.add_nodes_from([0, 2, 3, 4])
     assert not check_normal_integer_graph(g4)
+
+    g5 = generators.directed_path_graph(5)
+    assert not check_normal_integer_graph(g5)
 
 
 def test_back_to_original():

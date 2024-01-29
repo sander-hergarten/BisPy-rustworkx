@@ -2,6 +2,8 @@ import pytest
 import networkx as nx
 import rustworkx as rx
 
+import rustworkx.generators as generators
+
 from bispy.utilities.rank_computation import (
     compute_rank,
 )
@@ -36,6 +38,11 @@ def test_rank2():
     graph.add_edges_from(
         [(0, 1), (1, 2), (2, 3), (3, 4), (4, 0), (0, 5), (5, 6)]
     )
+    vertexes, _ = decorate_graph(graph)
+
+
+def test_rank2():
+    graph = generators.complete_graph(5).to_directed()
     vertexes, _ = decorate_graph(graph)
 
 

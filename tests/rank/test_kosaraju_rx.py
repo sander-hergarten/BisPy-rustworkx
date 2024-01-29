@@ -3,16 +3,15 @@ from bispy.utilities.graph_entities import (
     _Vertex,
     _Edge,
 )
-import networkx as nx
 import rustworkx as rx
 from bispy.utilities.kosaraju import kosaraju
 from bispy.utilities.graph_decorator import decorate_graph
 
 
 def test_scc1():
-    graph = nx.DiGraph()
+    graph = rx.PyDiGraph()
     graph.add_nodes_from(range(6))
-    graph.add_edges_from(
+    graph.add_edges_from_no_data(
         [
             (0, 1),
             (1, 2),
@@ -40,9 +39,9 @@ def test_scc1():
 
 
 def test_scc2():
-    graph = nx.DiGraph()
+    graph = rx.PyDiGraph()
     graph.add_nodes_from(range(6))
-    graph.add_edges_from(
+    graph.add_edges_from_no_data(
         [
             (0, 1),
             (1, 2),
@@ -70,9 +69,9 @@ def test_scc2():
 
 
 def test_scc3():
-    graph = nx.DiGraph()
+    graph = rx.PyDiGraph()
     graph.add_nodes_from(range(6))
-    graph.add_edges_from([(0, 1), (1, 2), (2, 3), (3, 4), (4, 5)])
+    graph.add_edges_from_no_data([(0, 1), (1, 2), (2, 3), (3, 4), (4, 5)])
 
     vertexes, _ = decorate_graph(graph)
     result = kosaraju(vertexes, return_sccs=True)
@@ -132,9 +131,11 @@ def test_scc3():
 
 
 def test_scc4():
-    graph = nx.DiGraph()
+    graph = rx.PyDiGraph()
     graph.add_nodes_from(range(5))
-    graph.add_edges_from([(0, 2), (0, 3), (1, 2), (2, 4), (3, 4), (0, 0)])
+    graph.add_edges_from_no_data(
+        [(0, 2), (0, 3), (1, 2), (2, 4), (3, 4), (0, 0)]
+    )
 
     vertexes, _ = decorate_graph(graph)
     result = kosaraju(vertexes, return_sccs=True)
@@ -186,9 +187,9 @@ def test_scc4():
 
 
 def test_scc5():
-    graph = nx.DiGraph()
+    graph = rx.PyDiGraph()
     graph.add_nodes_from(range(6))
-    graph.add_edges_from(
+    graph.add_edges_from_no_data(
         [
             (0, 3),
             (0, 2),
@@ -248,9 +249,9 @@ def test_scc5():
 
 
 def test_kosaraju_unvisits():
-    graph = nx.DiGraph()
+    graph = rx.PyDiGraph()
     graph.add_nodes_from(range(6))
-    graph.add_edges_from(
+    graph.add_edges_from_no_data(
         [
             (0, 1),
             (1, 2),

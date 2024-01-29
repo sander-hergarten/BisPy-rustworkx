@@ -1,4 +1,5 @@
 import networkx as nx
+import rustworkx as rx
 from typing import Iterable, List, Tuple, Dict, Union
 from itertools import islice
 from llist import dllist
@@ -206,7 +207,7 @@ def dovier_piazza_policriti_partition(
 
 
 def dovier_piazza_policriti(
-    graph: nx.Graph,
+    graph: nx.Graph | rx.PyDiGraph,
     initial_partition: List[Tuple[int]] = None,
     is_integer_graph: bool = False,
 ) -> List[Tuple]:
@@ -241,8 +242,8 @@ def dovier_piazza_policriti(
         list of tuples, each of which contains bisimilar nodes.
     """
 
-    if not isinstance(graph, nx.DiGraph):
-        raise Exception("graph should be a directed graph (nx.DiGraph)")
+    # if not isinstance(graph, nx.DiGraph):
+    #     raise Exception("graph should be a directed graph (nx.DiGraph)")
 
     # if True, the input graph is already an integer graph
     original_graph_is_integer = is_integer_graph or check_normal_integer_graph(
@@ -279,8 +280,10 @@ def dovier_piazza_policriti(
                     )
 
                 rscp.append(tuple(block_vertexes))
-
+    print(rscp)
     if original_graph_is_integer:
+        return rscp
+    elif isinstance(rscp, rx.PyDiGraph):
         return rscp
     else:
         return back_to_original(rscp, node_to_idx)

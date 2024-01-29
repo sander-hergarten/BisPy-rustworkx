@@ -1,6 +1,7 @@
 from llist import dllist, dllistnode
 from typing import List, Dict, Any, Tuple, Iterable
 import networkx as nx
+import rustworkx as rx
 
 from bispy.utilities.graph_entities import (
     _Vertex,
@@ -366,7 +367,7 @@ def paige_tarjan(
         list of tuples, each of which contains bisimilar nodes.
     """
 
-    if not isinstance(graph, nx.DiGraph):
+    if not (isinstance(graph, nx.DiGraph) or isinstance(graph, rx.PyDiGraph)):
         raise Exception("graph should be a directed graph (nx.DiGraph)")
 
     # if True, the input graph is already an integer graph
@@ -377,7 +378,7 @@ def paige_tarjan(
     # if initial_partition is None, then it's the trivial partition
     if initial_partition is None:
         # only list(graph.nodes) isn't OK
-        initial_partition = [list(graph.nodes)]
+        initial_partition = [list(graph.nodes())]
 
     if not original_graph_is_integer:
         # convert the graph to an "integer" graph

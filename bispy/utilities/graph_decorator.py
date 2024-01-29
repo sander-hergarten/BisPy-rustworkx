@@ -131,7 +131,7 @@ def compute_counterimage_finishing_time_list(
 
 
 def as_bispy_graph(
-    graph: nx.Graph | rx.PyDiGraph,
+    graph: nx.Graph | rx.PyGraph,
     initial_partition: List[Tuple[int]],
     build_image,
     set_count,
@@ -160,11 +160,12 @@ def as_bispy_graph(
 
         Both the items are in *BisPy* representation.
     """
-    if isinstance(graph, nx.Graph):
+    print("i am graph", type(graph))
+    if type(graph).__module__.startswith("networkx"):
         return _as_bispy_graph_nx(
             graph, initial_partition, build_image, set_count, set_xblock
         )
-    elif isinstance(graph, rx.PyDiGraph):
+    elif type(graph).__module__.startswith("rustworkx"):
         return _as_bispy_graph_rx(
             graph, initial_partition, build_image, set_count, set_xblock
         )
@@ -232,7 +233,7 @@ def _as_bispy_graph_nx(
 
 
 def _as_bispy_graph_rx(
-    graph: rx.PyDiGraph,
+    graph: rx.PyGraph,
     initial_partition: List[Tuple[int]],
     build_image,
     set_count,
@@ -326,7 +327,7 @@ def build_vertexes_image(finishing_time_list: List[_Vertex]):
 
 
 def decorate_graph(
-    graph: nx.Graph | rx.PyDiGraph,
+    graph: nx.Graph | rx.PyGraph,
     initial_partition: List[Tuple[int]] = None,
     set_count: bool = True,
     topological_sorted_images: bool = True,

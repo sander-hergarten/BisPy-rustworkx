@@ -47,10 +47,17 @@ def _convert_to_integer_graph_rx(
     integer_graph = rx.PyDiGraph()
 
     # add new integer nodes
-    integer_graph.add_nodes_from(range(len(graph.nodes())))
+    integer_graph.add_nodes_from(range(len(graph.node_indexes())))
 
     # map old nodes to integer nodes
-    node_to_idx = {old_node: idx for idx, old_node in enumerate(graph.nodes())}
+    if not (None in graph.nodes()):
+        node_to_idx = {
+            old_node: idx for idx, old_node in enumerate(graph.nodes())
+        }
+    else:
+        node_to_idx = {
+            old_node: idx for idx, old_node in enumerate(graph.node_indexes())
+        }
 
     # add integer edges
     integer_graph.add_edges_from(
@@ -104,6 +111,18 @@ def back_to_original(
 
     # create a mapping from idx to the original nodes
     idx_to_node = sorted(node_to_idx, key=lambda node: node_to_idx[node])
-
+    res = []
+    for block in partition:
+        bl = []
+        for idx in block:
+            print("fdfsfdsfsdfdsfsdfsdfsdfsd")
+            print(idx)
+            print(idx_to_node)
+            print(node_to_idx)
+            print("fdfsfdsfsdfdsfsdfsdfsdfsd")
+            bl.append(idx_to_node[idx])
+        res.append(tuple(bl))
     # compute the RSCP of the original graph
-    return [tuple(idx_to_node[idx] for idx in block) for block in partition]
+    print(type(res))
+    print("hi", res)
+    return res

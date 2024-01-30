@@ -160,7 +160,6 @@ def as_bispy_graph(
 
         Both the items are in *BisPy* representation.
     """
-    print("i am graph", type(graph))
     if type(graph).__module__.startswith("networkx"):
         return _as_bispy_graph_nx(
             graph, initial_partition, build_image, set_count, set_xblock
